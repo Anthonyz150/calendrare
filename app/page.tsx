@@ -46,7 +46,7 @@ export default function RebirthCalendar() {
           }}
           className="relative z-[999999] px-16 py-8 bg-white text-black font-black rounded-full cursor-pointer"
         >
-          TESTER LE CLIC
+          CLIQUEZ C'EST GRATUIT
         </button>
       </div>
     );
