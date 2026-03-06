@@ -31,6 +31,26 @@ export default function RebirthCalendar() {
     setCurrentMonth(subMonths(currentMonth, 1));
   };
 
+const handleSave = async () => {
+  if (!user) return;
+
+  const { error } = await supabase
+    .from('events') // Nom de ta table sur Supabase
+    .upsert({ 
+      user_id: user.id, 
+      date: format(selectedDate, 'yyyy-MM-dd'),
+      content: note 
+    });
+
+  if (error) {
+    console.error("Erreur lors de la sauvegarde:", error);
+    alert("Erreur de sauvegarde !");
+  } else {
+    setIsDrawerOpen(false);
+    alert("Note enregistrée avec succès !");
+  }
+};
+
   const handleDateClick = (day: Date) => {
     setSelectedDate(day);
     setIsDrawerOpen(true);
