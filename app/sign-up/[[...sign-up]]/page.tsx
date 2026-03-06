@@ -1,9 +1,8 @@
-import { SignIn } from "@clerk/nextjs";
+import { SignUp } from "@clerk/nextjs"; // <--- L'import manquant est ici
 
 export default function Page() {
   return (
     <div className="h-screen w-screen flex items-center justify-center bg-black relative">
-      {/* On remet ton fond stylé en arrière-plan */}
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,_#1e3a8a,_black,_#7f1d1d)] z-0" />
       
       <div className="relative z-10">
