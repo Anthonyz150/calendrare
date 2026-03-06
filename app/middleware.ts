@@ -1,21 +1,20 @@
 import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
 
-// On définit la route du calendrier comme protégée
+// On définit quelles routes doivent être protégées
 const isProtectedRoute = createRouteMatcher(['/']); 
 
 export default clerkMiddleware(async (auth, req) => {
-  // On attend que auth() soit résolu avant d'appeler .protect()
+  // On appelle protect() directement sur le résultat de auth()
   if (isProtectedRoute(req)) {
-    const authObject = await auth();
-    authObject.protect();
+    await auth.protect(); 
   }
 });
 
 export const config = {
   matcher: [
-    // On ignore les fichiers statiques et les composants internes de Next.js
+    // Ignore les fichiers statiques et les trucs internes de Next.js
     '/((?!_next|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)',
-    // On force le middleware sur l'API et les routes trpc
+    // Toujours exécuter pour les routes API
     '/(api|trpc)(.*)',
   ],
 };
