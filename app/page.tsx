@@ -38,15 +38,14 @@ export default function RebirthCalendar() {
         <button
           type="button"
           onClick={() => {
-            console.log("Tentative d'ouverture Clerk...");
+            alert("Le JavaScript fonctionne !");
             openSignIn({
-              // On force l'ouverture d'une petite fenêtre par-dessus ta page
-              signInForceRedirectUrl: "/",
+              forceRedirectUrl: "/", // C'est le nom standard dans la v5/v6
             });
           }}
           className="relative z-[999999] px-16 py-8 bg-white text-black font-black rounded-full cursor-pointer"
         >
-          CLIQUEZ C'EST GRATUIT
+          C'EST ICI !
         </button>
       </div>
     );
