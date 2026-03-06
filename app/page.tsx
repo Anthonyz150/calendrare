@@ -22,7 +22,6 @@ import { supabase } from "@/lib/supabase";
 export const dynamic = "force-dynamic";
 
 export default function RebirthCalendar() {
-
   const [currentMonth, setCurrentMonth] = useState<Date>(new Date());
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
   const [direction, setDirection] = useState<number>(0);
@@ -32,6 +31,7 @@ export default function RebirthCalendar() {
   const { user, isLoaded } = useUser();
   const { openSignIn } = useClerk();
 
+  // Chargement Clerk
   if (!isLoaded) {
     return (
       <div className="fixed inset-0 bg-black flex items-center justify-center text-white text-2xl">
@@ -40,10 +40,10 @@ export default function RebirthCalendar() {
     );
   }
 
+  // Utilisateur non connecté
   if (!user) {
     return (
       <div className="fixed inset-0 bg-black flex flex-col items-center justify-center gap-6 z-[99999]">
-
         <h1 className="text-white text-5xl font-black mb-8 tracking-tighter text-center">
           CALENDRARE
         </h1>
@@ -54,11 +54,11 @@ export default function RebirthCalendar() {
         >
           SE CONNECTER
         </button>
-
       </div>
     );
   }
 
+  // Navigation mois
   const nextMonth = (): void => {
     setDirection(1);
     setCurrentMonth(addMonths(currentMonth, 1));
@@ -69,15 +69,13 @@ export default function RebirthCalendar() {
     setCurrentMonth(subMonths(currentMonth, 1));
   };
 
+  // Sauvegarde Supabase
   const handleSave = async (): Promise<void> => {
-
-    const { error } = await supabase
-      .from("events")
-      .upsert({
-        user_id: user.id,
-        date: format(selectedDate, "yyyy-MM-dd"),
-        content: note,
-      });
+    const { error } = await supabase.from("events").upsert({
+      user_id: user.id,
+      date: format(selectedDate, "yyyy-MM-dd"),
+      content: note,
+    });
 
     if (error) {
       console.error(error);
@@ -89,8 +87,8 @@ export default function RebirthCalendar() {
     alert("Note enregistrée !");
   };
 
+  // Cliquer sur un jour
   const handleDateClick = async (day: Date): Promise<void> => {
-
     setSelectedDate(day);
 
     const { data } = await supabase
@@ -111,15 +109,11 @@ export default function RebirthCalendar() {
 
   return (
     <main className="h-screen w-screen overflow-hidden bg-black flex font-sans relative text-white">
-
       <div className="relative z-10 flex flex-col h-full flex-1 p-8 md:p-16">
-
+        {/* HEADER */}
         <header className="flex items-center justify-between mb-12">
-
           <div>
-
             <div className="flex items-center gap-4 mb-6 bg-white/10 p-2 rounded-full w-fit border border-white/20 backdrop-blur-xl">
-
               <div className="scale-125 origin-left ml-1">
                 <UserButton />
               </div>
@@ -127,17 +121,14 @@ export default function RebirthCalendar() {
               <span className="font-bold pr-4 text-sm tracking-wide">
                 {user.firstName || "Utilisateur"}
               </span>
-
             </div>
 
             <h1 className="text-8xl font-black uppercase tracking-tighter leading-none">
               {format(currentMonth, "MMMM", { locale: fr })}
             </h1>
-
           </div>
 
           <div className="flex gap-4">
-
             <button
               onClick={prevMonth}
               className="p-6 bg-white/5 hover:bg-white/10 rounded-3xl border border-white/10"
@@ -151,14 +142,12 @@ export default function RebirthCalendar() {
             >
               <ChevronRight size={32} />
             </button>
-
           </div>
         </header>
 
+        {/* CALENDRIER */}
         <div className="flex-1">
-
           <AnimatePresence initial={false} custom={direction} mode="popLayout">
-
             <motion.div
               key={currentMonth.toString()}
               custom={direction}
@@ -168,7 +157,6 @@ export default function RebirthCalendar() {
               transition={{ type: "spring", stiffness: 300, damping: 30 }}
               className="grid grid-cols-7 gap-4 w-full h-full"
             >
-
               {["Lun","Mar","Mer","Jeu","Ven","Sam","Dim"].map((d) => (
                 <div
                   key={d}
@@ -179,7 +167,6 @@ export default function RebirthCalendar() {
               ))}
 
               {days.map((day: Date) => {
-
                 const isSelected = isSameDay(day, selectedDate);
                 const isCurrentMonth = isSameMonth(day, currentMonth);
 
@@ -196,23 +183,19 @@ export default function RebirthCalendar() {
                         : "opacity-0 pointer-events-none"
                     }`}
                   >
-
                     <span className="text-4xl font-black">
                       {format(day, "d")}
                     </span>
-
                   </button>
                 );
               })}
-
             </motion.div>
-
           </AnimatePresence>
         </div>
       </div>
 
+      {/* TIROIR NOTE */}
       <AnimatePresence>
-
         {isDrawerOpen && (
           <motion.div
             initial={{ x: "100%" }}
@@ -220,23 +203,22 @@ export default function RebirthCalendar() {
             exit={{ x: "100%" }}
             className="fixed right-0 top-0 w-full max-w-xl h-full bg-black border-l border-white/10 p-12 flex flex-col"
           >
-
             <button
               onClick={() => setIsDrawerOpen(false)}
               className="self-end mb-8"
             >
-              <X size={40}/>
+              <X size={40} />
             </button>
 
             <div className="flex items-center gap-3 mb-4">
-              <MessageSquare size={24}/>
+              <MessageSquare size={24} />
               <span className="font-black uppercase text-sm">
                 Journal de Bord
               </span>
             </div>
 
             <h3 className="text-5xl font-black mb-10">
-              {format(selectedDate,"EEEE d MMMM",{ locale: fr })}
+              {format(selectedDate, "EEEE d MMMM", { locale: fr })}
             </h3>
 
             <textarea
@@ -251,15 +233,12 @@ export default function RebirthCalendar() {
               onClick={handleSave}
               className="py-6 bg-blue-600 rounded-2xl font-black flex items-center justify-center gap-4"
             >
-              <Save size={28}/>
+              <Save size={28} />
               ENREGISTRER
             </button>
-
           </motion.div>
         )}
-
       </AnimatePresence>
-
     </main>
   );
 }
