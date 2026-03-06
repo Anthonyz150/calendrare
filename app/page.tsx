@@ -120,7 +120,7 @@ export default function RebirthCalendar() {
           >
             <div className="flex items-center gap-4 mb-6 bg-white/10 p-2 rounded-full w-fit border border-white/20 shadow-2xl backdrop-blur-xl">
               <div className="scale-125 origin-left ml-1">
-                <UserButton afterSignOutUrl="/" />
+                <UserButton />
               </div>
               <span className="font-bold pr-4 text-sm tracking-wide">
                 {user?.firstName || "Utilisateur"}
