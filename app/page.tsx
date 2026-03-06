@@ -11,6 +11,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { UserButton, useUser } from "@clerk/nextjs";
 import { supabase } from '@/lib/supabase';
 
+export const dynamic = 'force-dynamic';
+
 export default function RebirthCalendar() {
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState(new Date());
