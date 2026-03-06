@@ -58,7 +58,7 @@ export default function RebirthCalendar() {
   const handleDateClick = (day: Date) => {
     setSelectedDate(day);
     setIsDrawerOpen(true);
-    setNote(""); 
+    setNote("");
   };
 
   const days = eachDayOfInterval({
@@ -74,21 +74,39 @@ export default function RebirthCalendar() {
       </div>
 
       <div className={`relative z-10 flex flex-col h-full flex-1 p-8 md:p-16 transition-all duration-500 ${isDrawerOpen ? 'pr-4 opacity-50 scale-[0.98]' : ''}`}>
-        <header className="flex items-center justify-between mb-12">
-          <motion.div key={currentMonth.getMonth()} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
-            <div className="flex items-center gap-4 mb-2 bg-white/10 p-2 rounded-full w-fit border border-white/20 shadow-xl relative z-50">
-              <UserButton />
-              {user && <span className="text-white font-bold pr-2">{user.firstName}</span>}
+        <header className="relative z-[100] flex items-center justify-between mb-12">
+          <motion.div
+            key={currentMonth.getMonth()}
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+          >
+            {/* Conteneur du bouton profil avec un Z-index très haut */}
+            <div className="flex items-center gap-4 mb-4 bg-white/10 p-2 rounded-full w-fit border border-white/20 shadow-2xl backdrop-blur-md">
+              <div className="scale-125 origin-left">
+                <UserButton afterSignOutUrl="/sign-in" />
+              </div>
+              {user ? (
+                <span className="text-white font-bold pr-3 text-sm tracking-wide">
+                  {user.firstName}
+                </span>
+              ) : (
+                <span className="text-white/40 text-xs pr-3 italic animate-pulse">Chargement...</span>
+              )}
             </div>
-            <h1 className="text-6xl font-black text-white uppercase tracking-tight">
+
+            <h1 className="text-7xl font-black text-white uppercase tracking-tighter leading-none">
               {format(currentMonth, 'MMMM', { locale: fr })}
             </h1>
-            <div className="h-1.5 w-32 bg-gradient-to-r from-blue-500 to-red-500 mt-2 rounded-full" />
+            <div className="h-2 w-24 bg-gradient-to-r from-blue-600 via-purple-500 to-red-600 mt-4 rounded-full shadow-[0_0_15px_rgba(59,130,246,0.5)]" />
           </motion.div>
 
           <div className="flex gap-4">
-            <button onClick={prevMonth} className="p-5 bg-white/5 hover:bg-white/10 rounded-2xl border border-white/10 text-white transition-all active:scale-90"><ChevronLeft size={32} /></button>
-            <button onClick={nextMonth} className="p-5 bg-white/5 hover:bg-white/10 rounded-2xl border border-white/10 text-white transition-all active:scale-90"><ChevronRight size={32} /></button>
+            <button onClick={prevMonth} className="p-5 bg-white/5 hover:bg-white/10 rounded-2xl border border-white/10 text-white transition-all hover:border-white/30 active:scale-90 shadow-xl">
+              <ChevronLeft size={32} />
+            </button>
+            <button onClick={nextMonth} className="p-5 bg-white/5 hover:bg-white/10 rounded-2xl border border-white/10 text-white transition-all hover:border-white/30 active:scale-90 shadow-xl">
+              <ChevronRight size={32} />
+            </button>
           </div>
         </header>
 
@@ -115,7 +133,7 @@ export default function RebirthCalendar() {
                   <motion.button
                     key={idx}
                     whileHover={{ scale: 1.05 }}
-                    onClick={() => isCurrentMonth && handleDateClick(day)} 
+                    onClick={() => isCurrentMonth && handleDateClick(day)}
                     className={`relative flex flex-col items-center justify-center rounded-[2rem] border transition-all duration-200 
                       ${isSelected ? 'bg-gradient-to-br from-blue-600 to-red-600 border-white/40 shadow-2xl' : isCurrentMonth ? 'bg-white/5 border-white/5 hover:border-white/20 backdrop-blur-md' : 'opacity-0 pointer-events-none'}`}
                   >
