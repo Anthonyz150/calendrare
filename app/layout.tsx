@@ -1,37 +1,37 @@
-import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
-import { ClerkProvider } from "@clerk/nextjs"; // 1. On importe le Provider
-import "./globals.css";
+import type { Metadata } from 'next'
+import { ClerkProvider } from '@clerk/nextjs'
+import { Geist, Geist_Mono } from 'next/font/google'
+import './globals.css'
 
 const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
+  variable: '--font-geist-sans',
+  subsets: ['latin'],
+})
 
 const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
+  variable: '--font-geist-mono',
+  subsets: ['latin'],
+})
 
 export const metadata: Metadata = {
-  title: "Calendrare",
-  description: "Calendrare",
-};
+  title: 'Calendrare',
+  description: 'Calendrare',
+}
 
 export default function RootLayout({
   children,
 }: Readonly<{
-  children: React.ReactNode;
+  children: React.ReactNode
 }>) {
   return (
-    <ClerkProvider> {/* 2. On entoure toute l'app pour activer l'auth */}
+    <ClerkProvider>
       <html lang="fr">
-        <body
-          className={`${geistSans.variable} ${geistMono.variable} antialiased m-0 p-0 overflow-hidden`}
-        >
+        {/* On force le bg-black et overflow-hidden pour un rendu propre */}
+        <body className={`${geistSans.variable} ${geistMono.variable} antialiased bg-black overflow-hidden m-0 p-0`}>
+          {/* On a enlevé le <header> moche car on a déjà notre propre UserButton dans page.tsx */}
           {children}
         </body>
       </html>
     </ClerkProvider>
-  );
+  )
 }
