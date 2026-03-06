@@ -38,8 +38,12 @@ export default function RebirthCalendar() {
         <button
           type="button"
           onClick={() => {
-            alert("Le JavaScript fonctionne !"); // Si ça s'affiche, le bouton est cliquable
-            openSignIn(); // Si ça ne s'ouvre pas après l'alerte, c'est ta CLÉ qui est morte
+            // On force l'ouverture en mode MODAL
+            openSignIn({
+              appearance: {
+                baseTheme: undefined, // Optionnel : pour garder le style par défaut
+              }
+            });
           }}
           className="relative z-[999999] px-16 py-8 bg-white text-black font-black rounded-full cursor-pointer"
         >
@@ -106,7 +110,7 @@ export default function RebirthCalendar() {
         {/* HEADER */}
         <header className="relative z-[100] flex items-center justify-between mb-12">
           <div className="relative z-[110]">
-            <div 
+            <div
               // ICI : On force l'ouverture si le bouton Clerk fait la sourde oreille
               onClick={() => {
                 console.log("Clic sur le container détecté");

@@ -24,8 +24,12 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-// app/layout.tsx
-<ClerkProvider publishableKey="pk_test_bmV3LXNocmV3LTIyLmNsZXJrLmFjY291bnRzLmRldiQ">
+    // app/layout.tsx
+    <ClerkProvider 
+  publishableKey={process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY}
+  signInUrl="/sign-in" 
+  signUpUrl="/sign-up" 
+>
   <html lang="fr">
     <body>{children}</body>
   </html>
