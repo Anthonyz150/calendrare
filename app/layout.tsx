@@ -24,7 +24,7 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <ClerkProvider>
+    <ClerkProvider publishableKey="pk_test_bmV3LXNocmV3LTIyLmNsZXJrLmFjY291bnRzLmRldiQ">
       <html lang="fr">
         {/* On force le bg-black et overflow-hidden pour un rendu propre */}
         <body className={`${geistSans.variable} ${geistMono.variable} antialiased bg-black overflow-hidden m-0 p-0`}>
