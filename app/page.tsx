@@ -38,11 +38,10 @@ export default function RebirthCalendar() {
         <button
           type="button"
           onClick={() => {
-            // On force l'ouverture en mode MODAL
+            console.log("Tentative d'ouverture Clerk...");
             openSignIn({
-              appearance: {
-                baseTheme: undefined, // Optionnel : pour garder le style par défaut
-              }
+              // On force l'ouverture d'une petite fenêtre par-dessus ta page
+              signInForceRedirectUrl: "/",
             });
           }}
           className="relative z-[999999] px-16 py-8 bg-white text-black font-black rounded-full cursor-pointer"
