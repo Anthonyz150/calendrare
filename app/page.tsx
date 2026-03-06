@@ -25,34 +25,20 @@ export default function RebirthCalendar() {
   // ÉCRAN D'ACCÈS (Si l'utilisateur n'est pas connecté)
   if (isLoaded && !user) {
     return (
-      <div className="h-screen w-screen bg-black flex flex-col items-center justify-center gap-6 z-[9999] relative overflow-hidden">
-        {/* Fond stylé */}
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_#1e3a8a_0%,_black_70%)] opacity-40" />
+      <div className="fixed inset-0 bg-black flex flex-col items-center justify-center gap-6 z-[99999]">
+        <h1 className="text-white text-5xl font-black mb-8">CALENDRARE</h1>
         
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="z-10 flex flex-col items-center text-center"
-        >
-          <h1 className="text-white text-7xl font-black uppercase tracking-tighter mb-2">
-            CALENDRARE
-          </h1>
-          <p className="text-white/30 text-sm uppercase tracking-[0.4em] mb-12">
-            Système de Journalisation Privé
-          </p>
-
-          {/* LE BOUTON MAGIQUE QUI RÉPARE TOUT */}
-          <SignInButton mode="modal">
-            <button className="group relative px-12 py-6 bg-white text-black font-black text-xl rounded-full hover:scale-105 transition-all active:scale-95 overflow-hidden">
-              <span className="relative z-10 text-black">SE CONNECTER</span>
-              <div className="absolute inset-0 bg-gradient-to-r from-blue-400 to-purple-500 opacity-0 group-hover:opacity-20 transition-opacity" />
-            </button>
-          </SignInButton>
-          
-          <p className="mt-8 text-white/20 text-xs uppercase tracking-widest animate-pulse">
-            En attente d'authentification...
-          </p>
-        </motion.div>
+        <SignInButton mode="modal">
+          <button 
+            style={{ cursor: 'pointer', position: 'relative', zIndex: 100000 }}
+            className="px-16 py-8 bg-white text-black font-bold rounded-full text-2xl active:scale-95"
+            onClick={() => console.log("Clic détecté !")}
+          >
+            SE CONNECTER
+          </button>
+        </SignInButton>
+  
+        <p className="text-white/20 text-xs mt-4">Vérifie la console (F12) si rien ne se passe</p>
       </div>
     );
   }
