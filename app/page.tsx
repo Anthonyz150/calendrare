@@ -52,7 +52,8 @@ export default function RebirthCalendar() {
             initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
           >
             <div className="flex items-center gap-4 mb-2 bg-white/10 p-2 rounded-full">
-              <UserButton afterSignOutUrl="/" />
+              {/* On enlève afterSignOutUrl car Clerk gère ça via le .env maintenant */}
+              <UserButton />
               {!user && <span className="text-white text-xs">Déconnecté</span>}
               {user && <span className="text-white font-bold">{user.firstName}</span>}
             </div>
