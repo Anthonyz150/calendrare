@@ -23,10 +23,17 @@ export default function RebirthCalendar() {
   const { user, isLoaded } = useUser();
 
   // On log l'état pour débugger dans la console (F12)
-  useEffect(() => {
-    console.log("État Clerk:", { isLoaded, user });
-  }, [isLoaded, user]);
-
+  if (isLoaded && !user) {
+    return (
+      <div className="h-screen w-screen bg-black flex flex-col items-center justify-center gap-6 z-[9999] relative">
+        <h1 className="text-white text-2xl font-black uppercase tracking-widest">Accès Restreint</h1>
+        <p className="text-white/50 text-sm">Connecte-toi pour accéder à ton calendrier</p>
+        <a href="/sign-in" className="px-8 py-4 bg-gradient-to-r from-blue-600 to-red-600 text-white font-bold rounded-full hover:scale-105 transition-all shadow-lg shadow-blue-500/20">
+          SE CONNECTER
+        </a>
+      </div>
+    );
+  }
   // --- SUPPRESSION DU BLOCAGE ---
   // On ne fait plus de "return" ici pour que le calendrier s'affiche quoi qu'il arrive
 
