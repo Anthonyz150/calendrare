@@ -18,7 +18,6 @@ export default function RebirthCalendar() {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [direction, setDirection] = useState(0);
 
-  // États pour le tiroir et les notes
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [note, setNote] = useState("");
 
@@ -34,11 +33,12 @@ export default function RebirthCalendar() {
     setCurrentMonth(subMonths(currentMonth, 1));
   };
 
+  // --- LA VRAIE FONCTION DE SAUVEGARDE ---
   const handleSave = async () => {
     if (!user) return;
 
     const { error } = await supabase
-      .from('events') // Nom de ta table sur Supabase
+      .from('events')
       .upsert({
         user_id: user.id,
         date: format(selectedDate, 'yyyy-MM-dd'),
@@ -46,10 +46,11 @@ export default function RebirthCalendar() {
       });
 
     if (error) {
-      console.error("Erreur lors de la sauvegarde:", error);
-      alert("Erreur de sauvegarde !");
+      console.error("Erreur:", error);
+      alert("Erreur de sauvegarde ! Vérifie ta table Supabase.");
     } else {
       setIsDrawerOpen(false);
+      setNote("");
       alert("Note enregistrée avec succès !");
     }
   };
@@ -57,8 +58,7 @@ export default function RebirthCalendar() {
   const handleDateClick = (day: Date) => {
     setSelectedDate(day);
     setIsDrawerOpen(true);
-    // On réinitialise la note (on la chargera depuis Supabase plus tard)
-    setNote("");
+    setNote(""); 
   };
 
   const days = eachDayOfInterval({
@@ -68,21 +68,14 @@ export default function RebirthCalendar() {
 
   return (
     <main className="h-screen w-screen overflow-hidden bg-black flex font-sans relative">
-
-      {/* LE FOND */}
       <div className="fixed inset-0 z-0">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,_#1e3a8a,_black,_#7f1d1d)]" />
         <div className="absolute inset-0 backdrop-blur-3xl opacity-50" />
       </div>
 
-      {/* SECTION CALENDRIER (Flex-1 prend toute la place restante) */}
       <div className={`relative z-10 flex flex-col h-full flex-1 p-8 md:p-16 transition-all duration-500 ${isDrawerOpen ? 'pr-4 opacity-50 scale-[0.98]' : ''}`}>
-
         <header className="flex items-center justify-between mb-12">
-          <motion.div
-            key={currentMonth.getMonth()}
-            initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
-          >
+          <motion.div key={currentMonth.getMonth()} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
             <div className="flex items-center gap-4 mb-2 bg-white/10 p-2 rounded-full w-fit border border-white/20 shadow-xl relative z-50">
               <UserButton />
               {user && <span className="text-white font-bold pr-2">{user.firstName}</span>}
@@ -94,12 +87,8 @@ export default function RebirthCalendar() {
           </motion.div>
 
           <div className="flex gap-4">
-            <button onClick={prevMonth} className="p-5 bg-white/5 hover:bg-white/10 rounded-2xl border border-white/10 text-white transition-all active:scale-90">
-              <ChevronLeft size={32} />
-            </button>
-            <button onClick={nextMonth} className="p-5 bg-white/5 hover:bg-white/10 rounded-2xl border border-white/10 text-white transition-all active:scale-90">
-              <ChevronRight size={32} />
-            </button>
+            <button onClick={prevMonth} className="p-5 bg-white/5 hover:bg-white/10 rounded-2xl border border-white/10 text-white transition-all active:scale-90"><ChevronLeft size={32} /></button>
+            <button onClick={nextMonth} className="p-5 bg-white/5 hover:bg-white/10 rounded-2xl border border-white/10 text-white transition-all active:scale-90"><ChevronRight size={32} /></button>
           </div>
         </header>
 
@@ -111,7 +100,7 @@ export default function RebirthCalendar() {
               initial={{ x: direction * 800, opacity: 0 }}
               animate={{ x: 0, opacity: 1 }}
               exit={{ x: direction * -800, opacity: 0 }}
-              transition={{ type: "spring", stiffness: 450, damping: 35, opacity: { duration: 0.2 } }}
+              transition={{ type: "spring", stiffness: 450, damping: 35 }}
               className="grid grid-cols-7 gap-4 w-full h-full"
             >
               {['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim'].map((d) => (
@@ -119,7 +108,6 @@ export default function RebirthCalendar() {
               ))}
 
               {days.map((day, idx) => {
-                const isToday = isSameDay(day, new Date());
                 const isSelected = isSameDay(day, selectedDate);
                 const isCurrentMonth = isSameMonth(day, currentMonth);
 
@@ -127,9 +115,9 @@ export default function RebirthCalendar() {
                   <motion.button
                     key={idx}
                     whileHover={{ scale: 1.05 }}
-                    // C'EST CETTE LIGNE QUI OUVRE LA SIDEBAR :
                     onClick={() => isCurrentMonth && handleDateClick(day)} 
-                    className={`relative flex flex-col items-center justify-center rounded-[2rem] border ...`}
+                    className={`relative flex flex-col items-center justify-center rounded-[2rem] border transition-all duration-200 
+                      ${isSelected ? 'bg-gradient-to-br from-blue-600 to-red-600 border-white/40 shadow-2xl' : isCurrentMonth ? 'bg-white/5 border-white/5 hover:border-white/20 backdrop-blur-md' : 'opacity-0 pointer-events-none'}`}
                   >
                     <span className="text-4xl font-bold text-white">{format(day, 'd')}</span>
                   </motion.button>
@@ -140,46 +128,31 @@ export default function RebirthCalendar() {
         </div>
       </div>
 
-      {/* TIROIR LATÉRAL (SIDEBAR) */}
       <AnimatePresence>
         {isDrawerOpen && (
           <motion.div
-            initial={{ x: '100%' }}
-            animate={{ x: 0 }}
-            exit={{ x: '100%' }}
+            initial={{ x: '100%' }} animate={{ x: 0 }} exit={{ x: '100%' }}
             transition={{ type: "spring", damping: 25, stiffness: 200 }}
-            className="relative z-30 w-full max-w-md h-full bg-black/40 backdrop-blur-3xl border-l border-white/10 p-10 flex flex-col shadow-2xl"
+            className="fixed right-0 top-0 z-50 w-full max-w-md h-full bg-black/60 backdrop-blur-3xl border-l border-white/10 p-10 flex flex-col shadow-2xl"
           >
-            <button onClick={() => setIsDrawerOpen(false)} className="absolute top-8 right-8 text-white/50 hover:text-white transition-colors">
-              <X size={32} />
-            </button>
-
+            <button onClick={() => setIsDrawerOpen(false)} className="absolute top-8 right-8 text-white/50 hover:text-white"><X size={32} /></button>
             <div className="mt-12">
               <div className="flex items-center gap-3 text-blue-400 mb-4">
                 <MessageSquare size={20} />
                 <span className="font-bold uppercase tracking-[0.2em] text-xs">Note du jour</span>
               </div>
-
-              <h3 className="text-4xl font-black text-white mb-8 capitalize">
-                {format(selectedDate, 'EEEE d MMMM', { locale: fr })}
-              </h3>
-
+              <h3 className="text-4xl font-black text-white mb-8 capitalize">{format(selectedDate, 'EEEE d MMMM', { locale: fr })}</h3>
               <textarea
                 value={note}
                 onChange={(e) => setNote(e.target.value)}
-                placeholder="Écris quelque chose..."
-                className="w-full h-64 bg-white/5 border border-white/10 rounded-3xl p-6 text-white text-lg focus:outline-none focus:border-red-500/50 transition-all resize-none mb-6"
+                placeholder="Qu'est-ce qu'on prévoit ?"
+                className="w-full h-64 bg-white/5 border border-white/10 rounded-3xl p-6 text-white text-lg focus:outline-none focus:border-blue-500 transition-all resize-none mb-6"
               />
-
               <button
-                onClick={() => {
-                  alert("On va envoyer '" + note + "' vers Supabase !");
-                  setIsDrawerOpen(false);
-                }}
-                className="w-full py-5 bg-gradient-to-r from-blue-600 to-red-600 text-white rounded-2xl font-bold text-xl flex items-center justify-center gap-3 hover:scale-[1.02] active:scale-[0.98] transition-all shadow-lg shadow-blue-900/20"
+                onClick={handleSave}
+                className="w-full py-5 bg-gradient-to-r from-blue-600 to-red-600 text-white rounded-2xl font-bold text-xl flex items-center justify-center gap-3 hover:scale-[1.02] active:scale-[0.98] transition-all shadow-lg"
               >
-                <Save size={24} />
-                Enregistrer
+                <Save size={24} /> Enregistrer
               </button>
             </div>
           </motion.div>
