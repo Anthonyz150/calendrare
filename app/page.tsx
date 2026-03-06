@@ -9,6 +9,7 @@ import { fr } from 'date-fns/locale';
 import { ChevronLeft, ChevronRight, X, Save, MessageSquare } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { UserButton, useUser } from "@clerk/nextjs";
+import { supabase } from '@/lib/supabase';
 
 export default function RebirthCalendar() {
   const [currentMonth, setCurrentMonth] = useState(new Date());
