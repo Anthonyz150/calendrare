@@ -8,7 +8,7 @@ import {
 import { fr } from 'date-fns/locale';
 import { ChevronLeft, ChevronRight, X, Save, MessageSquare } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { UserButton, useUser } from "@clerk/nextjs";
+import { UserButton, useUser, SignInButton } from "@clerk/nextjs"; // <--- AJOUTÉ ICI
 import { supabase } from '@/lib/supabase';
 
 export const dynamic = 'force-dynamic';
@@ -22,21 +22,42 @@ export default function RebirthCalendar() {
 
   const { user, isLoaded } = useUser();
 
-  // On log l'état pour débugger dans la console (F12)
+  // ÉCRAN D'ACCÈS (Si l'utilisateur n'est pas connecté)
   if (isLoaded && !user) {
     return (
-      <div className="h-screen w-screen bg-black flex flex-col items-center justify-center gap-6 z-[9999] relative">
-        <h1 className="text-white text-2xl font-black uppercase tracking-widest">Accès Restreint</h1>
-        <p className="text-white/50 text-sm">Connecte-toi pour accéder à ton calendrier</p>
-        <a href="/sign-in" className="px-8 py-4 bg-gradient-to-r from-blue-600 to-red-600 text-white font-bold rounded-full hover:scale-105 transition-all shadow-lg shadow-blue-500/20">
-          SE CONNECTER
-        </a>
+      <div className="h-screen w-screen bg-black flex flex-col items-center justify-center gap-6 z-[9999] relative overflow-hidden">
+        {/* Fond stylé */}
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_#1e3a8a_0%,_black_70%)] opacity-40" />
+        
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="z-10 flex flex-col items-center text-center"
+        >
+          <h1 className="text-white text-7xl font-black uppercase tracking-tighter mb-2">
+            CALENDRARE
+          </h1>
+          <p className="text-white/30 text-sm uppercase tracking-[0.4em] mb-12">
+            Système de Journalisation Privé
+          </p>
+
+          {/* LE BOUTON MAGIQUE QUI RÉPARE TOUT */}
+          <SignInButton mode="modal">
+            <button className="group relative px-12 py-6 bg-white text-black font-black text-xl rounded-full hover:scale-105 transition-all active:scale-95 overflow-hidden">
+              <span className="relative z-10 text-black">SE CONNECTER</span>
+              <div className="absolute inset-0 bg-gradient-to-r from-blue-400 to-purple-500 opacity-0 group-hover:opacity-20 transition-opacity" />
+            </button>
+          </SignInButton>
+          
+          <p className="mt-8 text-white/20 text-xs uppercase tracking-widest animate-pulse">
+            En attente d'authentification...
+          </p>
+        </motion.div>
       </div>
     );
   }
-  // --- SUPPRESSION DU BLOCAGE ---
-  // On ne fait plus de "return" ici pour que le calendrier s'affiche quoi qu'il arrive
 
+  // --- LOGIQUE DU CALENDRIER ---
   const nextMonth = () => {
     setDirection(1);
     setCurrentMonth(addMonths(currentMonth, 1));
@@ -48,10 +69,7 @@ export default function RebirthCalendar() {
   };
 
   const handleSave = async () => {
-    if (!user) {
-      alert("Connecte-toi pour enregistrer !");
-      return;
-    }
+    if (!user) return;
 
     const { error } = await supabase
       .from('events')
@@ -102,10 +120,10 @@ export default function RebirthCalendar() {
           >
             <div className="flex items-center gap-4 mb-6 bg-white/10 p-2 rounded-full w-fit border border-white/20 shadow-2xl backdrop-blur-xl">
               <div className="scale-125 origin-left ml-1">
-                <UserButton />
+                <UserButton afterSignOutUrl="/" />
               </div>
               <span className="font-bold pr-4 text-sm tracking-wide">
-                {!isLoaded ? "Chargement..." : user?.firstName || "Utilisateur"}
+                {user?.firstName || "Utilisateur"}
               </span>
             </div>
 
@@ -125,7 +143,7 @@ export default function RebirthCalendar() {
           </div>
         </header>
 
-        {/* CALENDRIER */}
+        {/* GRILLE DU CALENDRIER */}
         <div className="flex-1 relative">
           <AnimatePresence initial={false} custom={direction} mode="popLayout">
             <motion.div
@@ -165,7 +183,7 @@ export default function RebirthCalendar() {
         </div>
       </div>
 
-      {/* SIDEBAR (TIROIR) */}
+      {/* TIROIR (DRAWER) */}
       <AnimatePresence>
         {isDrawerOpen && (
           <>
@@ -189,7 +207,9 @@ export default function RebirthCalendar() {
                 <span className="font-black uppercase tracking-[0.3em] text-sm">Journal de Bord</span>
               </div>
               
-              <h3 className="text-6xl font-black mb-10 capitalize">{format(selectedDate, 'EEEE d MMMM', { locale: fr })}</h3>
+              <h3 className="text-6xl font-black mb-10 capitalize leading-tight">
+                {format(selectedDate, 'EEEE d MMMM', { locale: fr })}
+              </h3>
 
               <textarea
                 autoFocus
