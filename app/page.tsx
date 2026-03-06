@@ -1,9 +1,9 @@
 "use client";
 
 import React, { useState } from 'react';
-import { 
-  format, addMonths, subMonths, startOfMonth, endOfMonth, 
-  startOfWeek, endOfWeek, isSameMonth, isSameDay, eachDayOfInterval 
+import {
+  format, addMonths, subMonths, startOfMonth, endOfMonth,
+  startOfWeek, endOfWeek, isSameMonth, isSameDay, eachDayOfInterval
 } from 'date-fns';
 import { fr } from 'date-fns/locale';
 import { ChevronLeft, ChevronRight, X, Save, MessageSquare } from 'lucide-react';
@@ -17,7 +17,7 @@ export default function RebirthCalendar() {
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [direction, setDirection] = useState(0);
-  
+
   // États pour le tiroir et les notes
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [note, setNote] = useState("");
@@ -34,31 +34,31 @@ export default function RebirthCalendar() {
     setCurrentMonth(subMonths(currentMonth, 1));
   };
 
-const handleSave = async () => {
-  if (!user) return;
+  const handleSave = async () => {
+    if (!user) return;
 
-  const { error } = await supabase
-    .from('events') // Nom de ta table sur Supabase
-    .upsert({ 
-      user_id: user.id, 
-      date: format(selectedDate, 'yyyy-MM-dd'),
-      content: note 
-    });
+    const { error } = await supabase
+      .from('events') // Nom de ta table sur Supabase
+      .upsert({
+        user_id: user.id,
+        date: format(selectedDate, 'yyyy-MM-dd'),
+        content: note
+      });
 
-  if (error) {
-    console.error("Erreur lors de la sauvegarde:", error);
-    alert("Erreur de sauvegarde !");
-  } else {
-    setIsDrawerOpen(false);
-    alert("Note enregistrée avec succès !");
-  }
-};
+    if (error) {
+      console.error("Erreur lors de la sauvegarde:", error);
+      alert("Erreur de sauvegarde !");
+    } else {
+      setIsDrawerOpen(false);
+      alert("Note enregistrée avec succès !");
+    }
+  };
 
   const handleDateClick = (day: Date) => {
     setSelectedDate(day);
     setIsDrawerOpen(true);
     // On réinitialise la note (on la chargera depuis Supabase plus tard)
-    setNote(""); 
+    setNote("");
   };
 
   const days = eachDayOfInterval({
@@ -68,7 +68,7 @@ const handleSave = async () => {
 
   return (
     <main className="h-screen w-screen overflow-hidden bg-black flex font-sans relative">
-      
+
       {/* LE FOND */}
       <div className="fixed inset-0 z-0">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,_#1e3a8a,_black,_#7f1d1d)]" />
@@ -77,13 +77,13 @@ const handleSave = async () => {
 
       {/* SECTION CALENDRIER (Flex-1 prend toute la place restante) */}
       <div className={`relative z-10 flex flex-col h-full flex-1 p-8 md:p-16 transition-all duration-500 ${isDrawerOpen ? 'pr-4 opacity-50 scale-[0.98]' : ''}`}>
-        
+
         <header className="flex items-center justify-between mb-12">
-          <motion.div 
+          <motion.div
             key={currentMonth.getMonth()}
             initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
           >
-            <div className="flex items-center gap-4 mb-2 bg-white/10 p-2 rounded-full w-fit">
+            <div className="flex items-center gap-4 mb-2 bg-white/10 p-2 rounded-full w-fit border border-white/20 shadow-xl relative z-50">
               <UserButton />
               {user && <span className="text-white font-bold pr-2">{user.firstName}</span>}
             </div>
@@ -126,21 +126,12 @@ const handleSave = async () => {
                 return (
                   <motion.button
                     key={idx}
-                    whileHover={{ scale: 1.03 }}
-                    whileTap={{ scale: 0.97 }}
-                    onClick={() => isCurrentMonth && handleDateClick(day)}
-                    className={`
-                      relative flex flex-col items-center justify-center rounded-[2rem] border transition-all duration-200
-                      ${isSelected 
-                        ? 'bg-gradient-to-br from-blue-600 to-red-600 border-white/20 shadow-2xl shadow-blue-900/40' 
-                        : isCurrentMonth ? 'bg-white/5 border-white/5 hover:border-white/20 backdrop-blur-md' : 'opacity-0 pointer-events-none'
-                      }
-                    `}
+                    whileHover={{ scale: 1.05 }}
+                    // C'EST CETTE LIGNE QUI OUVRE LA SIDEBAR :
+                    onClick={() => isCurrentMonth && handleDateClick(day)} 
+                    className={`relative flex flex-col items-center justify-center rounded-[2rem] border ...`}
                   >
                     <span className="text-4xl font-bold text-white">{format(day, 'd')}</span>
-                    {isToday && !isSelected && (
-                      <div className="absolute top-4 right-4 h-3 w-3 bg-blue-400 rounded-full shadow-[0_0_15px_#3b82f6]" />
-                    )}
                   </motion.button>
                 );
               })}
@@ -168,19 +159,19 @@ const handleSave = async () => {
                 <MessageSquare size={20} />
                 <span className="font-bold uppercase tracking-[0.2em] text-xs">Note du jour</span>
               </div>
-              
+
               <h3 className="text-4xl font-black text-white mb-8 capitalize">
                 {format(selectedDate, 'EEEE d MMMM', { locale: fr })}
               </h3>
 
-              <textarea 
+              <textarea
                 value={note}
                 onChange={(e) => setNote(e.target.value)}
                 placeholder="Écris quelque chose..."
                 className="w-full h-64 bg-white/5 border border-white/10 rounded-3xl p-6 text-white text-lg focus:outline-none focus:border-red-500/50 transition-all resize-none mb-6"
               />
 
-              <button 
+              <button
                 onClick={() => {
                   alert("On va envoyer '" + note + "' vers Supabase !");
                   setIsDrawerOpen(false);
