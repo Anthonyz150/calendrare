@@ -14,28 +14,31 @@ import { supabase } from '@/lib/supabase';
 export const dynamic = 'force-dynamic';
 
 export default function RebirthCalendar() {
+  // 1. D'abord tous les states
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [direction, setDirection] = useState(0);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [note, setNote] = useState("");
+
+  // 2. Ensuite tous les Hooks de Clerk (Toujours groupés ici !)
   const { user, isLoaded } = useUser();
-  const { openSignIn } = useClerk();
+  const { openSignIn } = useClerk(); // <--- ELLE DOIT ÊTRE ICI
 
-  // ÉCRAN D'ACCÈS (Si l'utilisateur n'est pas connecté)
-  const { openSignIn } = useClerk();
-
+  // 3. SEULEMENT APRÈS, on fait les tests de redirection
   if (isLoaded && !user) {
     return (
       <div className="fixed inset-0 bg-black flex flex-col items-center justify-center gap-6 z-[99999]">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_#1e3a8a_0%,_black_70%)] opacity-40 pointer-events-none" />
         
-        <h1 className="text-white text-5xl font-black mb-8 z-10 tracking-tighter">CALENDRARE</h1>
+        <h1 className="text-white text-5xl font-black mb-8 z-10 tracking-tighter text-center">
+          CALENDRARE
+        </h1>
         
         <button 
           type="button"
           onClick={() => {
-            console.log("🚀 Lancement de la connexion...");
+            console.log("🚀 Clic détecté !");
             openSignIn(); 
           }}
           className="z-[100000] px-16 py-8 bg-white text-black font-black rounded-full text-2xl 
@@ -43,10 +46,6 @@ export default function RebirthCalendar() {
         >
           SE CONNECTER
         </button>
-
-        <p className="text-white/20 text-xs mt-4 z-10 uppercase tracking-widest">
-          Connexion requise
-        </p>
       </div>
     );
   }
