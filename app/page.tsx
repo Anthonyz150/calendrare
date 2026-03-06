@@ -8,7 +8,7 @@ import {
 import { fr } from 'date-fns/locale';
 import { ChevronLeft, ChevronRight, X, Save, MessageSquare } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { UserButton, useUser, SignInButton } from "@clerk/nextjs"; // <--- AJOUTÉ ICI
+import { UserButton, useUser, useClerk } from "@clerk/nextjs"; // On ajoute useClerk
 import { supabase } from '@/lib/supabase';
 
 export const dynamic = 'force-dynamic';
@@ -19,34 +19,32 @@ export default function RebirthCalendar() {
   const [direction, setDirection] = useState(0);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [note, setNote] = useState("");
-
   const { user, isLoaded } = useUser();
+  const { openSignIn } = useClerk();
 
   // ÉCRAN D'ACCÈS (Si l'utilisateur n'est pas connecté)
   if (isLoaded && !user) {
     return (
       <div className="fixed inset-0 bg-black flex flex-col items-center justify-center gap-6 z-[99999]">
-        {/* Fond avec un peu de profondeur */}
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_#1e3a8a_0%,_black_70%)] opacity-40 pointer-events-none" />
         
-        <h1 className="text-white text-5xl font-black mb-8 z-10 tracking-tighter">CALENDRARE</h1>
+        <h1 className="text-white text-5xl font-black mb-8 z-10">CALENDRARE</h1>
         
-        <SignInButton mode="modal">
-          <button 
-            type="button"
-            onClick={() => {
-              console.log("🚀 Bouton cliqué ! Ouverture de Clerk...");
-            }}
-            className="z-[100000] px-16 py-8 bg-white text-black font-black rounded-full text-2xl 
-                       shadow-[0_0_50px_rgba(255,255,255,0.2)] hover:shadow-[0_0_60px_rgba(255,255,255,0.4)]
-                       active:scale-90 active:bg-gray-200 transition-all cursor-pointer"
-          >
-            SE CONNECTER
-          </button>
-        </SignInButton>
+        <button 
+          type="button"
+          // VOICI LE ONCLICK QUI FAIT TOUT LE TRAVAIL :
+          onClick={() => {
+            console.log("BOUTON CLIQUÉ !");
+            openSignIn({ mode: "modal" });
+          }}
+          className="z-[100000] px-16 py-8 bg-white text-black font-black rounded-full text-2xl 
+                     shadow-[0_0_50px_rgba(255,255,255,0.2)] hover:scale-105 active:scale-95 transition-all cursor-pointer"
+        >
+          SE CONNECTER
+        </button>
 
         <p className="text-white/20 text-xs mt-4 z-10 uppercase tracking-widest">
-          Clique pour lancer l'authentification
+          Clique pour forcer l'ouverture
         </p>
       </div>
     );
