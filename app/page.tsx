@@ -26,19 +26,28 @@ export default function RebirthCalendar() {
   if (isLoaded && !user) {
     return (
       <div className="fixed inset-0 bg-black flex flex-col items-center justify-center gap-6 z-[99999]">
-        <h1 className="text-white text-5xl font-black mb-8">CALENDRARE</h1>
+        {/* Fond avec un peu de profondeur */}
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_#1e3a8a_0%,_black_70%)] opacity-40 pointer-events-none" />
+        
+        <h1 className="text-white text-5xl font-black mb-8 z-10 tracking-tighter">CALENDRARE</h1>
         
         <SignInButton mode="modal">
           <button 
-            style={{ cursor: 'pointer', position: 'relative', zIndex: 100000 }}
-            className="px-16 py-8 bg-white text-black font-bold rounded-full text-2xl active:scale-95"
-            onClick={() => console.log("Clic détecté !")}
+            type="button"
+            onClick={() => {
+              console.log("🚀 Bouton cliqué ! Ouverture de Clerk...");
+            }}
+            className="z-[100000] px-16 py-8 bg-white text-black font-black rounded-full text-2xl 
+                       shadow-[0_0_50px_rgba(255,255,255,0.2)] hover:shadow-[0_0_60px_rgba(255,255,255,0.4)]
+                       active:scale-90 active:bg-gray-200 transition-all cursor-pointer"
           >
             SE CONNECTER
           </button>
         </SignInButton>
-  
-        <p className="text-white/20 text-xs mt-4">Vérifie la console (F12) si rien ne se passe</p>
+
+        <p className="text-white/20 text-xs mt-4 z-10 uppercase tracking-widest">
+          Clique pour lancer l'authentification
+        </p>
       </div>
     );
   }
