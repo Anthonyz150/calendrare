@@ -24,14 +24,11 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
+// app/layout.tsx
 <ClerkProvider publishableKey="pk_test_bmV3LXNocmV3LTIyLmNsZXJrLmFjY291bnRzLmRldiQ">
   <html lang="fr">
-        {/* On force le bg-black et overflow-hidden pour un rendu propre */}
-        <body className={`${geistSans.variable} ${geistMono.variable} antialiased bg-black overflow-hidden m-0 p-0`}>
-          {/* On a enlevé le <header> moche car on a déjà notre propre UserButton dans page.tsx */}
-          {children}
-        </body>
-      </html>
-    </ClerkProvider>
+    <body>{children}</body>
+  </html>
+</ClerkProvider>
   )
 }
