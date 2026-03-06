@@ -83,7 +83,7 @@ export default function RebirthCalendar() {
             {/* Conteneur du bouton profil avec un Z-index très haut */}
             <div className="flex items-center gap-4 mb-4 bg-white/10 p-2 rounded-full w-fit border border-white/20 shadow-2xl backdrop-blur-md">
               <div className="scale-125 origin-left">
-                <UserButton afterSignOutUrl="/sign-in" />
+                <UserButton />
               </div>
               {user ? (
                 <span className="text-white font-bold pr-3 text-sm tracking-wide">
