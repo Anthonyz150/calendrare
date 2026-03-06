@@ -21,7 +21,7 @@ export default function RebirthCalendar() {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [note, setNote] = useState("");
 
-  const { user } = useUser();
+  const { user, isLoaded } = useUser();
 
   const nextMonth = () => {
     setDirection(1);
@@ -85,12 +85,14 @@ export default function RebirthCalendar() {
               <div className="scale-125 origin-left">
                 <UserButton />
               </div>
-              {user ? (
+              {!isLoaded ? (
+                <span className="text-white/40 text-xs pr-3 italic animate-pulse">Initialisation...</span>
+              ) : user ? (
                 <span className="text-white font-bold pr-3 text-sm tracking-wide">
-                  {user.firstName}
+                  {user.firstName || "Utilisateur"}
                 </span>
               ) : (
-                <span className="text-white/40 text-xs pr-3 italic animate-pulse">Chargement...</span>
+                <span className="text-white/40 text-xs pr-3 italic">Non connecté</span>
               )}
             </div>
 
