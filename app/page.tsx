@@ -23,19 +23,20 @@ export default function RebirthCalendar() {
   const { openSignIn } = useClerk();
 
   // ÉCRAN D'ACCÈS (Si l'utilisateur n'est pas connecté)
+  const { openSignIn } = useClerk();
+
   if (isLoaded && !user) {
     return (
       <div className="fixed inset-0 bg-black flex flex-col items-center justify-center gap-6 z-[99999]">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_#1e3a8a_0%,_black_70%)] opacity-40 pointer-events-none" />
         
-        <h1 className="text-white text-5xl font-black mb-8 z-10">CALENDRARE</h1>
+        <h1 className="text-white text-5xl font-black mb-8 z-10 tracking-tighter">CALENDRARE</h1>
         
         <button 
           type="button"
-          // VOICI LE ONCLICK QUI FAIT TOUT LE TRAVAIL :
           onClick={() => {
-            console.log("BOUTON CLIQUÉ !");
-            openSignIn({ mode: "modal" });
+            console.log("🚀 Lancement de la connexion...");
+            openSignIn(); 
           }}
           className="z-[100000] px-16 py-8 bg-white text-black font-black rounded-full text-2xl 
                      shadow-[0_0_50px_rgba(255,255,255,0.2)] hover:scale-105 active:scale-95 transition-all cursor-pointer"
@@ -44,7 +45,7 @@ export default function RebirthCalendar() {
         </button>
 
         <p className="text-white/20 text-xs mt-4 z-10 uppercase tracking-widest">
-          Clique pour forcer l'ouverture
+          Connexion requise
         </p>
       </div>
     );
