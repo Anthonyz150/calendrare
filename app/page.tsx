@@ -30,21 +30,20 @@ export default function RebirthCalendar() {
     return (
       <div className="fixed inset-0 bg-black flex flex-col items-center justify-center gap-6 z-[99999]">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_#1e3a8a_0%,_black_70%)] opacity-40 pointer-events-none" />
-        
+
         <h1 className="text-white text-5xl font-black mb-8 z-10 tracking-tighter text-center">
           CALENDRARE
         </h1>
-        
-        <button 
+
+        <button
           type="button"
           onClick={() => {
-            console.log("🚀 Clic détecté !");
-            openSignIn(); 
+            alert("Le JavaScript fonctionne !"); // Si ça s'affiche, le bouton est cliquable
+            openSignIn(); // Si ça ne s'ouvre pas après l'alerte, c'est ta CLÉ qui est morte
           }}
-          className="z-[100000] px-16 py-8 bg-white text-black font-black rounded-full text-2xl 
-                     shadow-[0_0_50px_rgba(255,255,255,0.2)] hover:scale-105 active:scale-95 transition-all cursor-pointer"
+          className="relative z-[999999] px-16 py-8 bg-white text-black font-black rounded-full cursor-pointer"
         >
-          SE CONNECTER
+          TESTER LE CLIC
         </button>
       </div>
     );
@@ -95,7 +94,7 @@ export default function RebirthCalendar() {
 
   return (
     <main className="h-screen w-screen overflow-hidden bg-black flex font-sans relative text-white">
-      
+
       {/* FOND DYNAMIQUE */}
       <div className="fixed inset-0 z-0">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,_#1e3a8a,_black,_#7f1d1d)]" />
@@ -103,7 +102,7 @@ export default function RebirthCalendar() {
       </div>
 
       <div className={`relative z-10 flex flex-col h-full flex-1 p-8 md:p-16 transition-all duration-500 ${isDrawerOpen ? 'pr-4 opacity-30 scale-[0.98] blur-sm' : ''}`}>
-        
+
         {/* HEADER */}
         <header className="relative z-[100] flex items-center justify-between mb-12">
           <motion.div
@@ -162,7 +161,7 @@ export default function RebirthCalendar() {
                     whileHover={isCurrentMonth ? { scale: 1.02 } : {}}
                     onClick={() => isCurrentMonth && handleDateClick(day)}
                     className={`relative flex flex-col items-center justify-center rounded-[2.5rem] border transition-all duration-300 
-                      ${isSelected ? 'bg-gradient-to-br from-blue-600 to-red-600 border-white/50 shadow-2xl z-20' : 
+                      ${isSelected ? 'bg-gradient-to-br from-blue-600 to-red-600 border-white/50 shadow-2xl z-20' :
                         isCurrentMonth ? 'bg-white/5 border-white/10 backdrop-blur-md' : 'opacity-0 pointer-events-none'}`}
                   >
                     <span className={`text-5xl font-black ${isSelected ? 'text-white' : 'text-white/90'}`}>
@@ -180,12 +179,12 @@ export default function RebirthCalendar() {
       <AnimatePresence>
         {isDrawerOpen && (
           <>
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
               onClick={() => setIsDrawerOpen(false)}
               className="fixed inset-0 bg-black/40 backdrop-blur-sm z-[998]"
             />
-            
+
             <motion.div
               initial={{ x: '100%' }} animate={{ x: 0 }} exit={{ x: '100%' }}
               transition={{ type: "spring", damping: 25, stiffness: 200 }}
@@ -194,12 +193,12 @@ export default function RebirthCalendar() {
               <button onClick={() => setIsDrawerOpen(false)} className="self-end p-2 hover:bg-white/10 rounded-full mb-8">
                 <X size={40} className="text-white/30 hover:text-white" />
               </button>
-              
+
               <div className="flex items-center gap-3 text-blue-500 mb-4">
                 <MessageSquare size={24} />
                 <span className="font-black uppercase tracking-[0.3em] text-sm">Journal de Bord</span>
               </div>
-              
+
               <h3 className="text-6xl font-black mb-10 capitalize leading-tight">
                 {format(selectedDate, 'EEEE d MMMM', { locale: fr })}
               </h3>
