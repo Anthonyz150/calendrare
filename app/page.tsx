@@ -104,17 +104,20 @@ export default function RebirthCalendar() {
       <div className={`relative z-10 flex flex-col h-full flex-1 p-8 md:p-16 transition-all duration-500 ${isDrawerOpen ? 'pr-4 opacity-30 scale-[0.98] blur-sm' : ''}`}>
 
         {/* HEADER */}
-        <header className="relative z-[100] flex items-center justify-between mb-12">
+        <header className="relative z-[9999] flex items-center justify-between mb-12">
           <motion.div
             key={currentMonth.getMonth()}
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
+            className="relative z-[10000]"
           >
-            <div className="flex items-center gap-4 mb-6 bg-white/10 p-2 rounded-full w-fit border border-white/20 shadow-2xl backdrop-blur-xl">
-              <div className="scale-125 origin-left ml-1">
-                <UserButton />
+            <div className="flex items-center gap-4 mb-6 bg-white/10 p-2 rounded-full w-fit border border-white/20 shadow-2xl backdrop-blur-xl hover:bg-white/20 transition-all">
+              {/* ON FORCE LE BOUTON ICI */}
+              <div className="scale-125 origin-left ml-1 cursor-pointer relative z-[10001]">
+                <UserButton appearance={{ elements: { userButtonTrigger: { cursor: 'pointer' } } }} />
               </div>
-              <span className="font-bold pr-4 text-sm tracking-wide">
+
+              <span className="font-bold pr-4 text-sm tracking-wide text-white">
                 {user?.firstName || "Utilisateur"}
               </span>
             </div>
@@ -125,11 +128,12 @@ export default function RebirthCalendar() {
             <div className="h-2 w-24 bg-gradient-to-r from-blue-600 via-purple-500 to-red-600 mt-4 rounded-full shadow-[0_0_20px_rgba(59,130,246,0.6)]" />
           </motion.div>
 
-          <div className="flex gap-4">
-            <button onClick={prevMonth} className="p-6 bg-white/5 hover:bg-white/10 rounded-3xl border border-white/10 transition-all active:scale-90">
+          {/* BOUTONS DE NAVIGATION */}
+          <div className="flex gap-4 relative z-[10000]">
+            <button onClick={prevMonth} className="p-6 bg-white/5 hover:bg-white/10 rounded-3xl border border-white/10 transition-all active:scale-90 cursor-pointer">
               <ChevronLeft size={32} />
             </button>
-            <button onClick={nextMonth} className="p-6 bg-white/5 hover:bg-white/10 rounded-3xl border border-white/10 transition-all active:scale-90">
+            <button onClick={nextMonth} className="p-6 bg-white/5 hover:bg-white/10 rounded-3xl border border-white/10 transition-all active:scale-90 cursor-pointer">
               <ChevronRight size={32} />
             </button>
           </div>
